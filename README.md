@@ -99,7 +99,7 @@ The IBKR API does a number of weird and wonderful things. I hope that my experie
 
 At the time of writing, the IBKR web API docs have recently undergone an update. Previously the only extra limit on requests for historical data from the `/iserver/marketdata/history` endpoint was that a maximum of 5 requests were issued concurrently, this has recently [September 9 2026](https://www.interactivebrokers.com/docs/web-api/changelog/2026/9/9) been updated to be further limited to only 10 req/s or 50 req/minute. The restriction on requests per minute is particularly restricting compared to the more generous previous limits (and those offered by TWS)
 
-Small bars are bars of size under 1 week, while large bars are those of size 1 week and over. 
+For the purposes of this guide, we will consider any bars of size under 1 week as "Small bars", while "large bars" will be those those of size 1 week and over. 
 
 Each of the points below is supplemented by examples in the file [`dataShow.ipynb`](./dataShow.ipynb)
 
@@ -127,13 +127,13 @@ Furthermore, the returned epoch time for larger bars will skip any weekends or n
 
 ### Partial bars and bar snapping for large bars
 
-While larger bars will usually snap to the start of the relevant period (monthly bars will start from first trading day of month), the earliest bar returned will often be a "partial" bar. Instead of returning data for the whole month, the earlier bar will snap onto some other date and then return statistics from the remaining part of the period after the starting date the server selected. For example, when requesting monthly bars, all of the bars will start on the 1st trading day of the month, however the first/earliest bar returned will start on the 10th trading day of the month. This often makes the earliest bar returned unreliable to use for data. 
+While larger bars will usually snap to the start of the relevant period (monthly bars will start from first trading day of month), the earliest bar returned will often be a "partial" bar. Instead of returning data for the whole month, the earlier bar will snap onto some other date and then return statistics from the remaining part of the period after the starting date the server selected. For example, when requesting monthly bars, all of the bars will start on the 1st trading day of the month, however the first/earliest bar returned may start on the 10th trading day of the month. This often makes the earliest bar returned unreliable to use for data. 
 
-These partial bars are unrelated to the start date provided. Say the date given to the API is the 20th day of the month, the earliest bar returned may be on the 10th (as opposed to starting on the 20th). Furthermore, the server seems to have dates that it likes to snap to when returning data since adjusting your selected date to fetch data from by plus/minus a few days will usually result in the exact same partial bar being returned. There doesn't seem to be a strong pattern in the dates that the server chooses to ssnap to. 
+These partial bars are unrelated to the start date provided. Say the date given to the API is the 20th day of the month, the earliest bar returned may be on the 10th (as opposed to starting on the 20th). Furthermore, the server seems to have dates that it likes to snap to when returning data since adjusting your selected date to fetch data from by plus/minus a few days will usually result in the exact same partial bar being returned. There doesn't seem to be a strong pattern in the dates that the server chooses to snap to. 
 
 It can also happen that the date on the bar is correct, however the data returned with the date doesn't reflect the movements of the underlying security over the whole bar period. 
 
-Furthermore, sometimes the number of bars (when including the partial bar) is inconsistent. When requesting 16 months of monthly data you may be returned with 17 bars, however when requesting 17 months of monthly data from the same date, you may again get 17 bars, this time with the earliest (partial) bar upgraded to a full bar. This can even happen when you ask for monthly bars for a period of 1 month and get 2 results. 
+Furthermore, sometimes the number of bars (when including the partial bar) is inconsistent. When requesting 16 months of monthly data you may be returned with 17 bars, however when requesting 17 months of monthly data from the same date, you may again get 17 bars, this time with the earliest (partial) bar upgraded to a full bar. This can even happen when you ask for monthly bars for a period of 1 month and get 2 results! 
 
 ### Inclusion of provided date for large bars
 

@@ -8,7 +8,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # This is fine when using the Gateway locally (majority of cases) but be careful if you ever host it on a different machine
 client = IbkrWebDlClient(certVerify=False)
 # How to set a custom server
-# client = IbkrWebDlClient("https://localhost:6000/v1/api", certVerify=False, debug=True)
+# client = IbkrWebDlClient("https://localhost:6000/v1/api", certVerify=False)
 
 # Fetches at least 5000 1h bars for AAPL stock, starting from the current time, saved to data.csv
 client.getDataByStock("AAPL", "1h", "data.csv", 5000)
