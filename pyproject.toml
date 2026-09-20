@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ibkrautowebdl"
+version = "0.1.0"
+description = "A Python client to allow easy download of bulk historical data from the IBKR Web API for stocks, forex, crypto and other securities."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.28",
+]
+keywords = ["interactive-brokers", "ibkr", "market-data", "historical-data", "api", "big-data", "csv", "trading", "algo-trading"]
+license = { text = "MIT" }
+authors = [
+  { name = "Syed Ahmad", email = "mail@hscscalinggraphs.au" },
+]
+
+[project.urls]
+Homepage = "https://github.com/HackintoshwithUbuntu/IBKR-web-api-auto-data-downloader"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ibkrautowebdl"]
