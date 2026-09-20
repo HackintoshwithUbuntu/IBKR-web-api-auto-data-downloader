@@ -62,7 +62,7 @@ class IbkrWebDlClient:
     def _get(self, path: str, params: dict) -> dict:
         # TODO rate limiting could be applied here as this function is shared. 
         # Notably short bars need more strict + bid_ask counts as 2 requests
-        r = self.session.get(f"{self.apiUrl}{path}", params=params, verify=self.certVerify)
+        r = self.session.get(f"{self.apiUrl}{path}", params=params, verify=self.certVerify, timeout=REQUEST_TIMEOUT)
         self.debugPrint(r.request.url)
 
         if r.status_code != 200:
