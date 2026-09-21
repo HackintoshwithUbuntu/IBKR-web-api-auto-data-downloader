@@ -52,7 +52,7 @@ bin/run.sh root/conf.yaml
 and then login (a Paper account will work fine for data downloads). 
 
 ### Example
-You can then use the library as following, run like you would with any other Python file to download the CSVs (you may want to use a tool such as `screen` or `tmux` if starting a long-running download)
+You can then use the library as following, run like you would with any other Python file to download the CSVs.
 ```py
 from ibkrautowebdl import IbkrWebDlClient
 from datetime import datetime
@@ -64,7 +64,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # This is fine when using the Gateway locally (majority of cases) but be careful if you ever host it on a different machine
 client = IbkrWebDlClient(certVerify=False)
 # How to set a custom server
-# client = IbkrWebDlClient("https://localhost:6000/v1/api", certVerify=False, debug=True)
+# client = IbkrWebDlClient("https://localhost:6000/v1/api", certVerify=False)
 
 # Fetches at least 5000 1h bars for AAPL stock, starting from the current time, saved to data.csv
 client.getDataByStock("AAPL", "1h", "data.csv", 5000)
@@ -90,6 +90,7 @@ client.getDataBySymbol(
 # print(client.queryConid("BRK"))
 # client.getDataByConid(198013455,"1h", "data.csv", 5000)
 ```
+If starting a long-running download, you may find it useful to use a tool such as `screen` or `tmux` to maintain your terminal session. It can also be helpful to enable `IbkrWebDlClient(debug=True)` to get some reassurance the code is actively working in the background
 
 While at a surface level the code of this library looks quite simple. It took extensive experimentation with the IBKR API to produce a client that could consitently download data for a variety of different instruments. The majority of this effort was spent in attempting to demystify some of the inconsistent behaviours of the IBKR API. To help those in future, I have documented my efforts so others can benefit. 
 
@@ -131,7 +132,7 @@ While larger bars will usually snap to the start of the relevant period (monthly
 
 These partial bars are unrelated to the start date provided. Say the date given to the API is the 20th day of the month, the earliest bar returned may be on the 10th (as opposed to starting on the 20th). Furthermore, the server seems to have dates that it likes to snap to when returning data since adjusting your selected date to fetch data from by plus/minus a few days will usually result in the exact same partial bar being returned. There doesn't seem to be a strong pattern in the dates that the server chooses to snap to. 
 
-It can also happen that the date on the bar is correct, however the data returned with the date doesn't reflect the movements of the underlying security over the whole bar period. 
+It can also happen that the date on the (earliest / latest) bar is correct, however the data returned with the date doesn't reflect the movements of the underlying security over the whole bar period. This is particularly hard to detect as you need to compare with a bar that you know is no "partial". 
 
 Furthermore, sometimes the number of bars (when including the partial bar) is inconsistent. When requesting 16 months of monthly data you may be returned with 17 bars, however when requesting 17 months of monthly data from the same date, you may again get 17 bars, this time with the earliest (partial) bar upgraded to a full bar. This can even happen when you ask for monthly bars for a period of 1 month and get 2 results! 
 
