@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ibkrautowebdl"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python client to allow easy download of bulk historical data from the IBKR Web API for stocks, forex, crypto and other securities."
 readme = "README.md"
 requires-python = ">=3.9"
